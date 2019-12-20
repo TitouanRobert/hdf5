@@ -1,0 +1,84 @@
+.column {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.class1{background-color:red}
+
+
+.centerdiv {text-align: center;}
+
+
+.positionDef {
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  overflow:hidden;
+  z-index:-1;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url(fond.png);
+}
+
+
+
+
+h2 {
+  background: -webkit-linear-gradient(#0028ed, #05114d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+.hrcustom {
+  border: 0 solid #eeedef;
+  border-top-width: 1px;
+  height: 0;
+  margin: 60px auto;
+  clear: both;
+  display: block;
+  width: 700px;
+  position: relative;
+}
+.hrcustom:before {
+  content: " ";
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  background-color: #999;
+}
+.hrcustom:before {
+  left: 0;
+  bottom: -3px;
+  box-shadow: 700px 0 0 -1px #999, 700px 0 0 0 #aaa;
+}
+.hrcustom:after {
+  content:url(R_logo.png);
+  display:block;
+  position:absolute;
+  left:50%;
+  height:50px;
+  width:50px;
+  margin:-25px 0 0 -25px;
+  border-radius:50px;
+  overflow:hidden;
+  box-shadow: 0 0 0 1px #eef, 0 0 5px;
+}
+
+.hrcustom {transform:scale(2)}
+
+
