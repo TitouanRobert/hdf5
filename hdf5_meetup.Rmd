@@ -1,10 +1,19 @@
 ---
-title: "Présentation hdf5"
-author: "Titouan Robert"
-date: "22 novembre 2019"
-output: slidy_presentation
-css: custom.css
+  output: 
+    slidy_presentation:
+    highlight: kate
+    footer: "Présentation hdf5"
+  css: custom.css  
 ---
+
+<div style="text-align:center" markdown="1">
+<br><br><br><br><br><br>
+<h2>Présentation hdf5</h2>
+<h3>T.Robert - titouant.robert@datastorm.fr</h3>
+<h3>Meetup R Addict Paris - 22/01/2020</h3>
+
+<img src="logo_ds_2018.png" alt="Drawing" style="width: 350px;"/>
+</div>
 
 ```{r setup, include=FALSE, echo=TRUE, message=FALSE, results='hide', warning=FALSE}
 library(rhdf5)
@@ -33,17 +42,35 @@ knitr::opts_chunk$set(echo = FALSE)
 </div>
 <div class="column">
 
-Un petit outil pour visualiser vos fichier h5 **sans R** ![alt text here](scrared.png)![alt text here](scrared.png)![alt text here](scrared.png)
+<div class = "centerdiv">
+<img src="image3.jpg" alt="Drawing" style="width: 700px;"/>
+</div>
+
+
+</div>
+</div>
+
+----
+
+<hr class = "hrcustom">
+
+<div class="row">
+<div class="column">
+
+**HDFView** : un petit outil pour visualiser vos fichier h5 **sans R** ![alt text here](scrared.png)![alt text here](scrared.png)![alt text here](scrared.png)
 
 https://support.hdfgroup.org/products/java/release/download.html#bin
 
 <div class = "centerdiv">
-![](dowloadKinks.png)
+<img src="dowloadKinks.png" alt="Drawing" style="width: 200px;"/>
 </div>
 
 * Permet une exploration rapide des fichiers
 * Facile d'utilisation
 
+</div>
+<div class="column">
+<img src="hdfview.png" alt="Drawing" style="width: 600px;"/>
 </div>
 </div>
 
@@ -87,10 +114,10 @@ h5createFile("myhdf5file.h5")
 <div class="row">
 <div class="column">
 
-* Les groupes et sous groupes servent pour structurer nos données.
-* Liste récursive (comme dans **R** ou **json**)
-
 ### Création de groupe / sous groupes
+
+* Les groupes et sous-groupes servent pour structurer nos données.
+* Liste récursive (comme dans **R** ou **json**)
 
 ```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE, results ='hide'}
 h5createGroup("myhdf5file.h5","foo")
@@ -98,7 +125,7 @@ h5createGroup("myhdf5file.h5","baa")
 h5createGroup("myhdf5file.h5","foo/foobaa")
 ```
 
-### La fonction *h5ls*, visualiser sa structure.
+### La fonction *h5ls* : visualiser sa structure.
 
 ```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE}
 h5ls("myhdf5file.h5")
@@ -134,18 +161,16 @@ h5ls("myhdf5file.h5")
 ### Accès avec une ouverture de connection
 
 ```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE}
-h5f <- H5Fopen("myhdf5file.h5") #Création de la connection vers le fichier H5
+h5f <- H5Fopen("myhdf5file.h5") # Ouverture de la connection
 # Accès aux objets
-h5f$df
-h5f$foo$A[1:2,]
-# Fermer la connection
-H5Fclose(h5f)
+h5f$df ; h5f$foo$A[1:2,]
+H5Fclose(h5f) # Fermeture la connection
 ```
 
 </div>
 <div class="column">
 
-### Accès sans overture de connection
+### Accès sans ouverture de connection
 
 ```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE}
 h5read("myhdf5file.h5", "foo/A")
@@ -154,32 +179,31 @@ h5read("myhdf5file.h5", "foo/A")
 </div>
 </div>
 
-## Sous parties d'objets
+## Sous-parties d'objets
 
 <div class="row">
 <div class="column">
 
 ### Lecture
 ```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE}
-h5read("myhdf5file.h5", "foo/A", index = list(2:3,2))
+h5read("myhdf5file.h5", "foo/A")
 ```
 
 ```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE}
+# subset sur les dimensions
 h5read("myhdf5file.h5", "foo/A", index = list(2:3,1:2))
 ```
 
 </div>
 <div class="column">
 
-### Update
+### Update des données
 
 ```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE}
-h5read("myhdf5file.h5", "foo/A")
-```
-
-```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE}
-h5write(matrix(151:154,nr=2,nc=2), file="myhdf5file.h5", name="foo/A",
-        start=c(2,1))
+h5write(matrix(151:154,nr = 2,nc = 2), 
+        file = "myhdf5file.h5", 
+        name = "foo/A",
+        start = c(2,1))
 h5read("myhdf5file.h5", "foo/A")
 ```
 
@@ -188,27 +212,31 @@ h5read("myhdf5file.h5", "foo/A")
 
 ## Fonctionnement des chunks
 
-![](sans_avec_chunk.png) ![](lecture_sans_chunk.png)
+* Permettent de lire des **sous-parties** de notre dataset sans le parcourir en entier
+* Doivent être définis judicieusement en fonction de l'utilisation
+* Augmentent le temps d'écriture, mais réduisent le temps de lecture
 
-* Permet de lire des **sous parties** de notre dataset sans le parcourir en entier
-* Doivent être posé judicieusement en fonction de l'utilisation
-* Augmente le temps d'écriture
+<div class="row">
+<div class="column">
+<img src="sans_avec_chunk.png" alt="Drawing" style="width: 550px;"/>
+</div>
+<div class="column">
+<img src="lecture_sans_chunk.png" alt="Drawing" style="width: 750px;"/>
+</div>
+</div>
 
-## Ecriture avec chunks h5createDataset
+## Définition des chunks : *h5createDataset*
 
 ```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE, results ='hide'}
-h5createDataset("myhdf5file.h5",
-                "foo/H",
-                c(1000, 1000 , 100),
-                storage.mode = "integer",
-                chunk = c(1000, 1, 1))
+h5createDataset(file = "myhdf5file.h5", dataset = "foo/H",dims = c(1000, 1000 , 100),
+                storage.mode = "integer", chunk = c(1000, 1, 1))
 
 arr <- array(runif(1000 * 1000 * 100), c(1000, 1000, 100))
 h5write(arr , file = "myhdf5file.h5", name = "foo/H", start = c(1, 1, 1))
 H5close()
 ```
 
-### Test rapidité de lecture
+### Performance à la lecture
 
 ```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 library(microbenchmark)
