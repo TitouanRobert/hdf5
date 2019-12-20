@@ -300,9 +300,6 @@ H5close()
 library(microbenchmark)
 mb <- microbenchmark(h5read("myhdf5file.h5", "G1/H", index = list(1:1000, 1, 1)),
                      h5read("myhdf5file.h5", "G1/H", index = list(1, 1:1000, 1)))
-mb[,1] <- as.character(mb[,1])
-mb[,1][which(mb[,1] == 'h5read(\"myhdf5file.h5\", \"G1/H\", index = list(1:1000, 1, 1))')] <- "Avec chunk"
-mb[,1][which(mb[,1] == 'h5read(\"myhdf5file.h5\", \"G1/H\", index = list(1, 1:1000, 1))')] <- "Sans chunk"
 
 ```
 
@@ -312,14 +309,9 @@ mb[,1][which(mb[,1] == 'h5read(\"myhdf5file.h5\", \"G1/H\", index = list(1, 1:10
 ```{r, eval=TRUE, include=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 library(DT)
 library(ggplot2)
-# mb <- summary(mb)
-# mb$expr <- as.character(mb$expr)
-# mb$expr[1] <- "Avec chunk"
-# mb$expr[2] <- "Sans chunk"
-# for(i in 2:ncol(mb)){
-#   mb[[i]] <- round(mb[[i]])
-# }
-# datatable(mb, options = list(dom = "t"), rownames = FALSE)
+mb[,1] <- as.character(mb[,1])
+mb[,1][which(mb[,1] == 'h5read(\"myhdf5file.h5\", \"G1/H\", index = list(1:1000, 1, 1))')] <- "Avec chunk"
+mb[,1][which(mb[,1] == 'h5read(\"myhdf5file.h5\", \"G1/H\", index = list(1, 1:1000, 1))')] <- "Sans chunk"
 autoplot(mb)
 ```
 
@@ -351,17 +343,6 @@ mb
 ```
 
 ```{r, eval=TRUE, include=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
-# library(DT)
-# mb <- summary(mb)
-# mb$expr <- as.character(mb$expr)
-# mb$expr[1] <- "h5read"
-# mb$expr[2] <- "fread"
-# mb$expr[3] <- "read.fst"
-# for(i in 2:ncol(mb)){
-#   mb[[i]] <- round(mb[[i]])
-# }
-# 
-# datatable(mb, options = list(dom = "t"), rownames = FALSE)
 autoplot(mb)
 ```
 
