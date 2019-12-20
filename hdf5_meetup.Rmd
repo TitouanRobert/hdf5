@@ -321,6 +321,8 @@ autoplot(mb)
 
 ## Benchmark contre le fonction R le ples rapides
 
+### Test en lecture force brute (matrice 10K * 10K)
+
 <hr class = "hrcustom">
 
 ```{r, eval=TRUE, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
@@ -346,3 +348,8 @@ mb
 autoplot(mb)
 ```
 
+## Conclusion
+
+- Un système rapide
+- Utilisé par tensorflow (google)
+- Repond a tout les besoins 
