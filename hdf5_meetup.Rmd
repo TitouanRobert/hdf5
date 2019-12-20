@@ -27,15 +27,16 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <hr class = "hrcustom">
 
-
 Il existe deux forme de stockage :
 
-* Les fichiers textes : l'information est stockée sous forme de caractères lisibles par un éditeur de texte (principalement des lettres et des chiffres).
-* Les fichiers binaires : l'information est stockée en binaire (une suite d'octets dont la valeur est comprise entre 0x00 et 0xFF).
-
+* Les fichiers textes : l'information est stockée sous forme de caractères lisibles par un éditeur de texte principalement des lettres et des chiffres (csv, txt)
+* Les fichiers binaires : l'information est stockée en binaire une suite d'octets dont la valeur est comprise entre 0x00 et 0xFF (rds, h5)
+  
 Les fichiers binaires sont moins corruptibles, (amère expérience sur un fichier de backup en csv).
 
-AJOUTER TABLEAU COMPARAISON DIFF TYPE STOACKAGES!!
+Tableau a refaire
+<img src="cepe.png" alt="Drawing" style="width: 700px;"/>
+
 
 ## Présentation de HDF5
 
@@ -44,6 +45,7 @@ AJOUTER TABLEAU COMPARAISON DIFF TYPE STOACKAGES!!
 <div class="row">
 <div class="column">
 
+* Un stockage local -> Un fichier par de base de données
 * Des fichiers binaires (extension h5)
 * Des fichiers structurés
 * Possibilité de stocker :
@@ -52,7 +54,7 @@ AJOUTER TABLEAU COMPARAISON DIFF TYPE STOACKAGES!!
     + tenseur (tableau 3D)
 * Un stockage local (pas de BDD)
 * Le plus rapide que j'ai trouvé pour des tenseurs volumineux
-* Utiliser par tensorflow
+* Utiliser par tensorflow (potentiellement beaucoups de coefficients > 10^6)
 * Possibilité de compresser les données
 </div>
 <div class="column">
@@ -107,10 +109,9 @@ Un tuto sympa : https://www.bioconductor.org/packages/release/bioc/vignettes/rhd
 
 ### D'autres choix 
 
-h5 ¤¤ hdf5r ¤¤  hdfqlr
+h5 **¤¤** hdf5r **¤¤**  hdfqlr
 
-rhdf5 est bien intégré, intégré depuis longtemps et maintenue à jour.
-
+rhdf5 à l'avantage d'être bien intégré, stable (ancienneté), et maintenue à jour
 
 <hr>
 
@@ -123,6 +124,7 @@ rhdf5 est bien intégré, intégré depuis longtemps et maintenue à jour.
 install.packages("BiocManager")
 BiocManager::install("rhdf5")
 ```
+
 </div>
 <div class="column">
 
@@ -137,13 +139,9 @@ h5createFile("myhdf5file.h5")
 </div>
 </div>
 
-
-
 ## Création de structure et écriture d'objets
 
 <hr class = "hrcustom">
-
-
 <div class="row">
 <div class="column">
 
@@ -218,12 +216,15 @@ Taille de **h5f$df** 1896 bytes
 h5read("myhdf5file.h5", "G2/A")
 ```
 
+
+D'un avis personnel :
+
+* La première option est très utile dans un contexte d'exploration, **rapide** et **facile** à utiliser
+* La seconde option est très utile dans une logique d'industrialisation, pas de fermeture de connection dons aps de bug en cas de platage.
+
 </div>
 </div>
 
-D'un avis personnel :
-* La première option est très utile dans un contexte d'exploration, **rapide** et **facile** à utiliser
-* La seconde option est très utile dans une logique d'industrialisation, pas de fermeture de connection dons aps de bug en cas de platage.
 
 ## Sous-parties d'objets
 
