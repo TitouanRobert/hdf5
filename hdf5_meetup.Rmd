@@ -220,7 +220,7 @@ h5read("myhdf5file.h5", "G2/A")
 D'un avis personnel :
 
 * La première option est très utile dans un contexte d'exploration, **rapide** et **facile** à utiliser
-* La seconde option est très utile dans une logique d'industrialisation, pas de fermeture de connection dons aps de bug en cas de platage.
+* La seconde option est très utile dans une logique d'industrialisation, pas de fermeture de connection dons pas de bug en cas de platage.
 
 </div>
 </div>
@@ -262,7 +262,7 @@ h5read("myhdf5file.h5", "G2/A")
 
 <hr class = "hrcustom">
 
-* Permettent de lire des **sous-parties** de notre dataset sans le parcourir en entier
+* Permettent de lire des **sous-parties** d'objet sans le parcourir en entier
 * Doivent être définis judicieusement en fonction de l'utilisation
 * Augmentent le temps d'écriture, mais réduisent le temps de lecture
 
@@ -279,6 +279,12 @@ h5read("myhdf5file.h5", "G2/A")
 
 <hr class = "hrcustom">
 
+<div class="row">
+<div class="column">
+
+
+### Utilisation de l'argument chunk
+
 ```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE, results ='hide'}
 h5createDataset(file = "myhdf5file.h5", dataset = "G1/H",dims = c(1000, 1000 , 100),
                 storage.mode = "integer", chunk = c(1000, 1, 1))
@@ -289,31 +295,46 @@ H5close()
 
 ### Performance à la lecture
 
+
 ```{r, eval=TRUE, include=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
 library(microbenchmark)
 mb <- microbenchmark(h5read("myhdf5file.h5", "G1/H", index = list(1:1000, 1, 1)),
                      h5read("myhdf5file.h5", "G1/H", index = list(1, 1:1000, 1)))
+mb[,1] <- as.character(mb[,1])
+mb[,1][which(mb[,1] == 'h5read(\"myhdf5file.h5\", \"G1/H\", index = list(1:1000, 1, 1))')] <- "Avec chunk"
+mb[,1][which(mb[,1] == 'h5read(\"myhdf5file.h5\", \"G1/H\", index = list(1, 1:1000, 1))')] <- "Sans chunk"
+
 ```
+
+</div>
+<div class="column">
 
 ```{r, eval=TRUE, include=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 library(DT)
-mb <- summary(mb)
-mb$expr <- as.character(mb$expr)
-mb$expr[1] <- "Avec chunk"
-mb$expr[2] <- "Sans chunk"
-for(i in 2:ncol(mb)){
-  mb[[i]] <- round(mb[[i]])
-}
-datatable(mb, options = list(dom = "t"), rownames = FALSE)
+library(ggplot2)
+# mb <- summary(mb)
+# mb$expr <- as.character(mb$expr)
+# mb$expr[1] <- "Avec chunk"
+# mb$expr[2] <- "Sans chunk"
+# for(i in 2:ncol(mb)){
+#   mb[[i]] <- round(mb[[i]])
+# }
+# datatable(mb, options = list(dom = "t"), rownames = FALSE)
+autoplot(mb)
 ```
 
-## Benchmark contre du lourd
+
+</div>
+</div>
+
+## Benchmark contre le fonction R le ples rapides
 
 <hr class = "hrcustom">
 
 ```{r, eval=TRUE, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 library(data.table)
 library(fst)
+library(ggplot2)
 mat <- matrix(1 : (10000 * 10000), ncol = 10000)
 fwrite(mat, "mat.csv")
 h5write(mat, "myhdf5file.h5", "G1/mat1", level = 0)
@@ -321,21 +342,26 @@ write.fst(data.frame(mat), "fst.fst")
 
 mb <- microbenchmark(h5read("myhdf5file.h5", "G1/mat1"),
                      fread("mat.csv"),
-                     read.fst("fst.fst"), times = 5L)
+                     read.fst("fst.fst"), times = 20L)
+mb[,1] <- as.character(mb[,1])
+mb[,1][which(mb[,1] == 'h5read(\"myhdf5file.h5\", \"G1/mat1\")')] = "h5read"
+mb[,1][which(mb[,1] == 'fread(\"mat.csv\")')] = "fread"
+mb[,1][which(mb[,1] == 'read.fst(\"fst.fst\")')] = "read.fst"
 mb
 ```
 
 ```{r, eval=TRUE, include=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
-library(DT)
-mb <- summary(mb)
-mb$expr <- as.character(mb$expr)
-mb$expr[1] <- "h5read"
-mb$expr[2] <- "fread"
-mb$expr[3] <- "read.fst"
-for(i in 2:ncol(mb)){
-  mb[[i]] <- round(mb[[i]])
-}
-
-datatable(mb, options = list(dom = "t"), rownames = FALSE)
+# library(DT)
+# mb <- summary(mb)
+# mb$expr <- as.character(mb$expr)
+# mb$expr[1] <- "h5read"
+# mb$expr[2] <- "fread"
+# mb$expr[3] <- "read.fst"
+# for(i in 2:ncol(mb)){
+#   mb[[i]] <- round(mb[[i]])
+# }
+# 
+# datatable(mb, options = list(dom = "t"), rownames = FALSE)
+autoplot(mb)
 ```
 
