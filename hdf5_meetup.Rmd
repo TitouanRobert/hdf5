@@ -9,8 +9,8 @@
 <div style="text-align:center" markdown="1">
 <br><br><br><br><br><br>
 <h2>Présentation hdf5</h2>
-<h3>T.Robert - titouant.robert@datastorm.fr</h3>
-<h3>Meetup R Addict Paris - 22/01/2020</h3>
+<h3>T.Robert - titouan.robert@datastorm.fr</h3>
+<h3>Meetup R Addict Paris - 16/01/2020</h3>
 
 <img src="logo_ds_2018.png" alt="Drawing" style="width: 350px;"/>
 </div>
@@ -23,18 +23,17 @@ if(file.exists("myhdf5file.h5")){
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Introduction au stocakge
+## Introduction au stockage
 
 <hr class = "hrcustom">
 
-Il existe deux forme de stockage :
+Il existe deux formes de stockage :
 
 * Les fichiers textes : l'information est stockée sous forme de caractères lisibles par un éditeur de texte principalement des lettres et des chiffres (csv, txt)
 * Les fichiers binaires : l'information est stockée en binaire une suite d'octets dont la valeur est comprise entre 0x00 et 0xFF (rds, h5)
   
 Les fichiers binaires sont moins corruptibles, (amère expérience sur un fichier de backup en csv).
 
-Tableau a refaire
 <img src="cepe.png" alt="Drawing" style="width: 700px;"/>
 
 
@@ -45,7 +44,7 @@ Tableau a refaire
 <div class="row">
 <div class="column">
 
-* Un stockage local -> Un fichier par de base de données
+* Un stockage local -> Un fichier pas de base de données
 * Des fichiers binaires (extension h5)
 * Des fichiers structurés
 * Possibilité de stocker :
@@ -54,7 +53,7 @@ Tableau a refaire
     + tenseur (tableau 3D)
 * Un stockage local (pas de BDD)
 * Le plus rapide que j'ai trouvé pour des tenseurs volumineux
-* Utiliser par tensorflow (potentiellement beaucoups de coefficients > 10^6)
+* Utilisé par tensorflow (potentiellement beaucoups de coefficients > 10^6)
 * Possibilité de compresser les données
 </div>
 <div class="column">
@@ -62,8 +61,6 @@ Tableau a refaire
 <div class = "centerdiv">
 <img src="image3.jpg" alt="Drawing" style="width: 700px;"/>
 </div>
-
-
 </div>
 </div>
 
@@ -111,7 +108,7 @@ Un tuto sympa : https://www.bioconductor.org/packages/release/bioc/vignettes/rhd
 
 h5 **¤¤** hdf5r **¤¤**  hdfqlr
 
-rhdf5 à l'avantage d'être bien intégré, stable (ancienneté), et maintenue à jour
+rhdf5 à l'avantage d'être bien intégré, stable (ancienneté), et maintenu à jour
 
 <hr>
 
@@ -220,7 +217,7 @@ h5read("myhdf5file.h5", "G2/A")
 D'un avis personnel :
 
 * La première option est très utile dans un contexte d'exploration, **rapide** et **facile** à utiliser
-* La seconde option est très utile dans une logique d'industrialisation, pas de fermeture de connection dons pas de bug en cas de platage.
+* La seconde option est très utile dans une logique d'industrialisation, pas de fermeture de connection dons pas de bug en cas de plantage.
 
 </div>
 </div>
@@ -319,11 +316,11 @@ autoplot(mb)
 </div>
 </div>
 
-## Benchmark contre le fonction R le ples rapides
-
-### Test en lecture force brute (matrice 10K * 10K)
+## Benchmark contre les fonction R les plus rapides
 
 <hr class = "hrcustom">
+
+### Test en lecture force brute (matrice 10K * 10K)
 
 ```{r, eval=TRUE, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 library(data.table)
@@ -350,7 +347,28 @@ autoplot(mb)
 
 ## Conclusion
 
+<hr class = "hrcustom">
+
+<div class="row">
+<div class="column">
+
 - Un système rapide
 - Utilisé par tensorflow (google)
-- Repond a tout les besoins 
+- Repond à tous les besoins 
+- Bien intrégré sous R
+- Non corruptible
+- Multi plateforme
 
+### Exemples d'utilisations
+
+- Mise à jour des coefficients lors de l'apprentissage d'un reseau de neurones
+- Branché à une application shiny pour garder de la réactivité avec de gros volumes de données (Antares, RTE)
+
+</div>
+<div class="column">
+
+<img src="hdf.png" alt="Drawing" style="width: 700px;"/>
+
+
+</div>
+</div>
